@@ -1,12 +1,12 @@
 import json
 import os
+import shutil
 
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.core.management import call_command
 
 from documents.models import Document
-from paperless.db import GnuPG
 
 from ...mixins import Renderable
 
@@ -92,8 +92,4 @@ class Command(Renderable, BaseCommand):
 
             doc_file = record["__exported_file_name__"]
             document = Document.objects.get(pk=record["pk"])
-            with open(doc_file, "rb") as unencrypted:
-                with open(document.source_path, "wb") as encrypted:
-                    print("Encrypting {} and saving it to {}".format(
-                        doc_file, document.source_path))
-                    encrypted.write(GnuPG.encrypted(unencrypted))
+            shutil.copyfile(doc_file, document.source_path)

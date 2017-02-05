@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import time
 
 from django.conf import settings
@@ -7,7 +8,6 @@ from django.core.management.base import BaseCommand, CommandError
 from django.core import serializers
 
 from documents.models import Document, Correspondent, Tag
-from paperless.db import GnuPG
 
 from ...mixins import Renderable
 
@@ -66,10 +66,9 @@ class Command(Renderable, BaseCommand):
 
             print("Exporting: {}".format(target))
 
-            with open(target, "wb") as f:
-                f.write(GnuPG.decrypted(document.source_file))
-                t = int(time.mktime(document.created.timetuple()))
-                os.utime(target, times=(t, t))
+            shutil.copyfile(document.source_file, target)
+            t = int(time.mktime(document.created.timetuple()))
+            os.utime(target, times=(t, t))
 
         manifest += json.loads(
             serializers.serialize("json", Correspondent.objects.all()))
@@ -89,10 +88,9 @@ class Command(Renderable, BaseCommand):
 
             print("Exporting: {}".format(target))
 
-            with open(target, "wb") as f:
-                f.write(GnuPG.decrypted(document.source_file))
-                t = int(time.mktime(document.created.timetuple()))
-                os.utime(target, times=(t, t))
+            shutil.copyfile(target, document.source_file)
+            t = int(time.mktime(document.created.timetuple()))
+            os.utime(target, times=(t, t))
 
     @staticmethod
     def _get_legacy_file_name(doc):

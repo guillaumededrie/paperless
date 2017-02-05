@@ -15,7 +15,6 @@ import langdetect
 from PIL import Image
 from django.conf import settings
 from django.utils import timezone
-from paperless.db import GnuPG
 from pyocr.tesseract import TesseractError
 from pyocr.libtesseract.tesseract_raw import \
     TesseractError as OtherTesseractError
@@ -316,17 +315,8 @@ class Consumer(object):
             self.log("debug", "Tagging with {}".format(tag_names))
             document.tags.add(*relevant_tags)
 
-        # Encrypt and store the actual document
-        with open(doc, "rb") as unencrypted:
-            with open(document.source_path, "wb") as encrypted:
-                self.log("debug", "Encrypting the document")
-                encrypted.write(GnuPG.encrypted(unencrypted))
-
-        # Encrypt and store the thumbnail
-        with open(thumbnail, "rb") as unencrypted:
-            with open(document.thumbnail_path, "wb") as encrypted:
-                self.log("debug", "Encrypting the thumbnail")
-                encrypted.write(GnuPG.encrypted(unencrypted))
+        shutil.copyfile(doc, document.source_path)
+        shutil.copyfile(thumbnail, document.thumbnail_path)
 
         self.log("info", "Completed")
 

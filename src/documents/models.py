@@ -200,7 +200,7 @@ class Document(models.Model):
             settings.MEDIA_ROOT,
             "documents",
             "originals",
-            "{:07}.{}.gpg".format(self.pk, self.file_type)
+            "{:07}.{}".format(self.pk, self.file_type)
         )
 
     @property
@@ -221,7 +221,7 @@ class Document(models.Model):
             settings.MEDIA_ROOT,
             "documents",
             "thumbnails",
-            "{:07}.png.gpg".format(self.pk)
+            "{:07}.png".format(self.pk)
         )
 
     @property

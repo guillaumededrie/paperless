@@ -207,9 +207,6 @@ OCR_THREADS = os.getenv("PAPERLESS_OCR_THREADS")
 # will simply be left in the CONSUMPTION_DIR.
 FORGIVING_OCR = bool(os.getenv("PAPERLESS_FORGIVING_OCR", "YES").lower() in ("yes", "y", "1", "t", "true"))
 
-# GNUPG needs a home directory for some reason
-GNUPG_HOME = os.getenv("HOME", "/tmp")
-
 # Convert is part of the ImageMagick package
 CONVERT_BINARY = os.getenv("PAPERLESS_CONVERT_BINARY", "convert")
 CONVERT_TMPDIR = os.getenv("PAPERLESS_CONVERT_TMPDIR")
@@ -241,15 +238,6 @@ MAIL_CONSUMPTION = {
     "USE_SSL": os.getenv("PAPERLESS_CONSUME_MAIL_USE_SSL", "y").lower() == "y",  # If True, use SSL/TLS to connect
     "INBOX": "INBOX"  # The name of the inbox on the server
 }
-
-# This is used to encrypt the original documents and decrypt them later when
-# you want to download them.  Set it and change the permissions on this file to
-# 0600, or set it to `None` and you'll be prompted for the passphrase at
-# runtime.  The default looks for an environment variable.
-# DON'T FORGET TO SET THIS as leaving it blank may cause some strange things
-# with GPG, including an interesting case where it may "encrypt" zero-byte
-# files.
-PASSPHRASE = os.getenv("PAPERLESS_PASSPHRASE")
 
 # If you intend to use the "API" to push files into the consumer, you'll need
 # to provide a shared secret here.  Leaving this as the default will disable
